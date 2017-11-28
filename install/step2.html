@@ -1,0 +1,176 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>{$this->site_info['Title']} - {$this->site_info['Powered']}</title>
+    <link rel="stylesheet" href="./css/install.css?v=9.0" />
+</head>
+<body>
+<div class="wrap">
+    <div class="header">
+        <h1 class="logo">logo</h1>
+        <div class="icon_install">安装向导——用户协议</div>
+        <div class="version"></div>
+    </div>
+    <section class="section">
+        <div class="step">
+            <ul>
+                <li class="current"><em>1</em>检测环境</li>
+                <li><em>2</em>创建数据</li>
+                <li><em>3</em>完成安装</li>
+            </ul>
+        </div>
+        <div class="server">
+            <table width="100%">
+                <tr>
+                    <td class="td1">环境检测</td>
+                    <td class="td1" width="25%">推荐配置</td>
+                    <td class="td1" width="25%">当前状态</td>
+                    <td class="td1" width="25%">最低要求</td>
+                </tr>
+                <tr>
+                    <td>操作系统</td>
+                    <td>类UNIX</td>
+                    <td><span class="correct_span">&radic;</span> <?php echo $os; ?></td>
+                    <td>不限制</td>
+                </tr>
+                <tr>
+                    <td>服务器环境</td>
+                    <td>apache/nginx</td>
+                    <td><?php echo $server; ?></td>
+                    <td><?php echo 'apache'.$this->min_req['apache'].'/nginx'.$this->min_req['nginx']; ?></td>
+                </tr>
+                <tr>
+                    <td>PHP版本</td>
+                    <td><?php echo $this->install_info['phpversion'] ?></td>
+                    <td><?php echo $phpv; ?></td>
+                    <td><?php echo $this->min_req['phpversion'] ?>以上</td>
+                </tr>
+                <tr>
+                    <td>附件上传</td>
+                    <td><?php echo $this->install_info['uploadSize'] ?></td>
+                    <td><?php echo $uploadSize; ?></td>
+                    <td><?php echo $recommend_uploadSize ?></td>
+                </tr>
+                <tr>
+                    <td>session</td>
+                    <td><?php echo $this->install_info['session']; ?></td>
+                    <td><?php echo $session; ?></td>
+                    <td><?php echo $recommend_session ?></td>
+                </tr>
+                <tr>
+                    <td>safe_mode</td>
+                    <td><?php echo $this->install_info['safe_mode'] ?></td>
+                    <td><?php echo $safe_mode; ?></td>
+                    <td><?php echo $min_safe_mode; ?></td>
+                </tr>
+                <tr>
+                    <td>GD库</td>
+                    <td><?php echo $this->install_info['gd']; ?></td>
+                    <td><?php echo $gd; ?></td>
+                    <td><?php echo $recommend_gd; ?></td>
+                </tr>
+                <tr>
+                    <td>mysqli</td>
+                    <td><?php echo $this->install_info['mysqli']; ?></td>
+                    <td><?php echo $mysql; ?></td>
+                    <td><?php echo $recommend_mysqli; ?></td>
+                </tr>
+            </table>
+            <table width="100%">
+                <tr>
+                    <td class="td1">目录、文件权限检查</td>
+                    <td class="td1" width="25%">推荐配置</td>
+                    <td class="td1" width="25%">写入</td>
+                    <td class="td1" width="25%">读取</td>
+                </tr>
+                <?php
+		foreach($folder as $dir){
+		     $Testdir = $dir;
+			 //echo "<br/>";
+                //dir_create($Testdir);
+                if(is_writable($Testdir)){
+                $w = '<span class="correct_span">&radic;</span>可写 ';
+                }else{
+                $w = '<span class="correct_span error_span">&radic;</span>不可写 ';
+                $err++;
+                }
+                if(is_readable($Testdir)){
+                $r = '<span class="correct_span">&radic;</span>可读' ;
+                }else{
+                $r = '<span class="correct_span error_span">&radic;</span>不可读';
+                $err++;
+                }
+                ?>
+                <tr>
+                    <td><?php echo $dir; ?></td>
+                    <td>读写</td>
+                    <td><?php echo $w; ?></td>
+                    <td><?php echo $r; ?></td>
+                </tr>
+                <?php
+		}
+		?>
+                <tr>
+                    <td>application/database.php</td>
+                    <td>读写</td>
+                    <?php
+                     if (is_writable('application/database.php')){
+                        echo "<td><span class='correct_span'>√</span>可写 </td>
+                    <td><span class='correct_span'>√</span>可读</td>";
+                    }else{
+                    $err++;
+                    echo "<td><span class='correct_span error_span'>&radic;</span>不可写 </td>
+                    <td><span class='correct_span error_span'>&radic;</span>不可读</td>";
+                    }
+                    ?>
+                </tr>
+                <tr>
+                    <td>application/config.php</td>
+                    <td>读写</td>
+                    <?php
+                     if (is_writable('application/config.php')){
+                        echo "<td><span class='correct_span'>√</span>可写 </td>
+                    <td><span class='correct_span'>√</span>可读</td>";
+                    }else{
+                    $err++;
+                    echo "<td><span class='correct_span error_span'>&radic;</span>不可写 </td>
+                    <td><span class='correct_span error_span'>&radic;</span>不可读</td>";
+                    }
+                    ?>
+                </tr>
+            </table>
+            <table width="100%">
+                <tr>
+                    <td class="td1">函数检测</td>
+                    <td class="td1" width="25%">推荐配置</td>
+                    <td class="td1" width="25%">当前状态</td>
+                    <td class="td1" width="25%">最低要求</td>
+                </tr>
+                <?php
+                foreach ($fun_name as $key => $value){
+                    echo "
+                <tr>
+                    <td>".$key."</td>
+                    <td>必须扩展</td>
+                    <td>".$value."</td>
+                    <td>--</td>
+                </tr>
+                ";
+                }
+                ?>
+            </table>
+        </div>
+        <div class="bottom tac">
+            <a href="<?php echo $_SERVER['PHP_SELF']; ?>?step=2" class="btn">重新检测</a>
+            <?php if($err>0){?>
+            <a href="javascript:void(0)" onClick="javascript:alert('安装环境检测未通过，请检查')" class="btn" style="background: gray;">下一步</a>
+            <?php }else{?>
+            <a href="<?php echo $_SERVER['PHP_SELF']; ?>?step=3" class="btn">下一步</a>
+            <?php }?>
+        </div>
+    </section>
+</div>
+<div class="footer"> &copy; {$copyright}  <a href="http://{$host}" target="_blank">{$host}</a> {$this->site_info['Inc']}</div>
+</body>
+</html>
